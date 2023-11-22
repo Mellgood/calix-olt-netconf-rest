@@ -2,6 +2,7 @@ from flask_restx import Namespace, Resource
 
 ns = Namespace('config', description='Configuration operations')
 
+
 @ns.route('/')
 class RunningConfig(Resource):
     def get(self):
