@@ -52,8 +52,10 @@ class PonCosProfileGetPutDelAPI(Resource):
                     new_max=input_data.get("maximum_bw"),
                     new_min=input_data.get("min_bw")
                 )
+                profile.set_cos_type(input_data.get("cos_type"))
+                profile.set_priority(input_data.get("priority"))
 
-                if(dev_env):
+                if dev_env:
                     print("[WARNING]: We are running in dev mode. No interaction with the OLT!")
                 else:
                     self.netconf_session.netconf_edit_config(profile.generate_netconf_payload(), description=f"Apply values from REST API: {self.__class__.__name__}")
