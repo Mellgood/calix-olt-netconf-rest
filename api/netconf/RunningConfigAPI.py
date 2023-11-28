@@ -1,6 +1,8 @@
 from flask import jsonify, make_response
 from flask_restx import Namespace, Resource, fields
 
+from model.netconf.NetconfSession import NetconfSession
+
 ns = Namespace('RunningConfig', description='Manage Running Configuration')
 
 model = ns.model('RunningConfigModel', {
@@ -12,6 +14,7 @@ class RunningConfigAPI(Resource):
     def __init__(self, api=None, *args, **kwargs):
         super().__init__(api, *args, **kwargs)
         self.running_config = kwargs.get('running_config')
+        self.netconf_session = NetconfSession()
 
     def get(self):
         # Logica per ottenere la configurazione corrente
