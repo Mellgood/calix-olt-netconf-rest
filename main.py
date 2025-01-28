@@ -7,6 +7,7 @@ from api.netconf.PonCosProfileAPI import init_pon_cos_profile_ns
 from api.netconf.RunningConfigAPI import init_running_config_namespace
 from model.netconf.NetconfSession import NetconfSession
 from model.netconf.RunningConfig import RunningConfig
+from model.netconf.ServiceAPI import init_service_namespace
 
 app = Flask(__name__)
 api = Api(app, title='Univaq API for calix E-7', version='1.0',
@@ -34,6 +35,7 @@ if __name__ == '__main__':
 
         init_running_config_namespace(api, running_config)
         init_pon_cos_profile_ns(api, running_config)
+        init_service_namespace(api)
 
     # init_pon_cos_profile_namespace(api, running_config)
     # init_running_config_namespace(api, running_config)

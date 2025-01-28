@@ -1,0 +1,3 @@
+interface pon 1/1/xp2
+no shutdown
+

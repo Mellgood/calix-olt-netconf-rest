@@ -1,9 +1,21 @@
+import json
 import xml.etree.ElementTree as ET
+from model.api_model.ServiceModel import ServiceModel
+
 
 class PonCosProfile:
     def __init__(self, element):
         self.element = element
         self.namespace = {'exa': 'http://www.calix.com/ns/exa/gpon-interface-base'}
+
+        self.name = self._get_text('exa:name')
+        self.priority = self._get_text('exa:prio')
+        self.cos_type = self._get_text('exa:cos-type')
+        bw_element = self.element.find('exa:bw', namespaces=self.namespace)
+        self.bandwidth_type = self._get_text('exa:type', bw_element)
+        self.bandwidth_max = self._get_text('exa:maximum', bw_element)
+        self.bandwidth_min = self._get_text('exa:minimum', bw_element)
+
 
     def __str__(self):
         bandwidth = self.get_bandwidth()
@@ -93,4 +105,14 @@ class PonCosProfile:
         netconf_payload = ET.tostring(config_element, encoding="unicode")
         return netconf_payload
 
+    def get_data(self):
+        profile_data = {
+            "name": self.name,
+            "priority": self.get_priority(),
+            "bandwidth_type": self.bandwidth_type,
+            "maximum_bw": self.bandwidth_max,
+            "min_bw": self.bandwidth_min,
+            "cos_type": self.cos_type
+        }
+        return profile_data
 
