@@ -3,7 +3,7 @@ import os
 from ncclient import manager
 from termcolor import colored
 
-from model.netconf.am_create_service import create_service
+from model.netconf.seasonnetconfdemo.PON import create_service, delete_service
 
 dev_run = os.getenv('DEV')
 dev_run = False
@@ -90,6 +90,36 @@ class NetconfSession:
         """
         Creates and configures a service on an ONT.
         """
-        create_service(self.session, ont_id, cvlan, ethernet_port, svlan, profile, bw=bw)
+        try:
+            return create_service(self.session, ont_id, cvlan, ethernet_port, svlan, profile, bw=bw)
+        except Exception as e:
+            raise RuntimeError(f"NETCONF create_service failed: {str(e)}")
 
+    def delete_service(self, ont_id, ethernet_port, svlan, profile):
+        """
+        Deletes a configured service from an ONT.
+        """
+        try:
+            return delete_service(self.session, ont_id, ethernet_port, svlan, profile)
+        except Exception as e:
+            raise RuntimeError(f"NETCONF delete_service failed: {str(e)}")
 
+    def get_inventory(self):
+        # XML per ottenere l'inventario hardware della rete
+        inventory_request = """
+        <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+          <get>
+            <filter type="subtree">
+              <ietf-network-hardware-inventory:network-hardware-inventory xmlns:ietf-network-hardware-inventory="urn:ietf:params:xml:ns:yang:ietf-network-hardware-inventory">
+              </ietf-network-hardware-inventory:network-hardware-inventory>
+            </filter>
+          </get>
+        </rpc>
+        """
+
+        try:
+            response = self.session.dispatch(inventory_request)
+            return response
+        except Exception as e:
+            print(f"Error getting inventory: {e}")
+            return None
