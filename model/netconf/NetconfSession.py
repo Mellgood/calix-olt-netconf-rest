@@ -3,7 +3,10 @@ import os
 from ncclient import manager
 from termcolor import colored
 
+from model.netconf.seasonnetconfdemo.PON import create_service, delete_service
+
 dev_run = os.getenv('DEV')
+dev_run = False
 
 
 class NetconfSession:
@@ -36,12 +39,11 @@ class NetconfSession:
                       f"parameters. This will result in no effect.")
 
     def _check_response(self, rpc_obj, snippet_name):
-        # print("RPCReply for %s is %s" % (snippet_name, rpc_obj.xml))
-        xml_str = rpc_obj.xml
+        xml_str = rpc_obj.xml if rpc_obj else "<No Response>"
         if "<ok/>" in xml_str:
-            print("%s: SUCCESSFUL" % snippet_name)
+            print(f"{snippet_name}: SUCCESSFUL")
         else:
-            print("ERROR: Cannot successfully execute: %s" % snippet_name)
+            print(f"ERROR: {snippet_name} failed with response: {xml_str}")
 
     def netconf_edit_config(self, xml_config, description="NO DESCRIPTION FOR THIS edit_config command PROVIDED"):
         if dev_run:
@@ -82,4 +84,42 @@ class NetconfSession:
             message = "[ERROR]: " + str(e.__class__) + " occurred."
             print(colored(message, "red"))
             print(colored(str(e), "red"))
+            return None
+
+    def create_service(self, ont_id, cvlan, ethernet_port, svlan, profile, bw=None):
+        """
+        Creates and configures a service on an ONT.
+        """
+        try:
+            return create_service(self.session, ont_id, cvlan, ethernet_port, svlan, profile, bw=bw)
+        except Exception as e:
+            raise RuntimeError(f"NETCONF create_service failed: {str(e)}")
+
+    def delete_service(self, ont_id, ethernet_port, svlan, profile):
+        """
+        Deletes a configured service from an ONT.
+        """
+        try:
+            return delete_service(self.session, ont_id, ethernet_port, svlan, profile)
+        except Exception as e:
+            raise RuntimeError(f"NETCONF delete_service failed: {str(e)}")
+
+    def get_inventory(self):
+        # XML per ottenere l'inventario hardware della rete
+        inventory_request = """
+        <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+          <get>
+            <filter type="subtree">
+              <ietf-network-hardware-inventory:network-hardware-inventory xmlns:ietf-network-hardware-inventory="urn:ietf:params:xml:ns:yang:ietf-network-hardware-inventory">
+              </ietf-network-hardware-inventory:network-hardware-inventory>
+            </filter>
+          </get>
+        </rpc>
+        """
+
+        try:
+            response = self.session.dispatch(inventory_request)
+            return response
+        except Exception as e:
+            print(f"Error getting inventory: {e}")
             return None

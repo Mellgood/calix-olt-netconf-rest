@@ -1,0 +1,1949 @@
+version AXOS-R21.2.0.1
+schema-version 26.1.0
+schema-versions schema-version 26.1.0
+dos-protection-profile SYSTEM
+!
+cos priority-map-profile 8-traffic-class
+ s-vlan-pcp 0 1
+ !
+ s-vlan-pcp 1 2
+ !
+ s-vlan-pcp 2 3
+ !
+ s-vlan-pcp 3 4
+ !
+ s-vlan-pcp 4 5
+ !
+ s-vlan-pcp 5 6
+ !
+ s-vlan-pcp 6 7
+ !
+ s-vlan-pcp 7 8
+ !
+!
+class-map ethernet Eth-match-any-1
+ flow 1
+  rule 1 match any
+ !
+!
+class-map ethernet Eth-match-any-2
+ flow 1
+  rule 1 match any
+ !
+!
+class-map ethernet Eth-match-any-3
+ flow 1
+  rule 1 match any
+ !
+!
+class-map ethernet Eth-vlan-112
+ flow 1
+  rule 1 match vlan 112 pcp 0
+  rule 2 match vlan 112 pcp 1
+  rule 3 match vlan 112 pcp 2
+  rule 4 match vlan 112 pcp 3
+  rule 5 match vlan 112 pcp 4
+  rule 6 match vlan 112 pcp 5
+  rule 7 match vlan 112 pcp 6
+  rule 8 match vlan 112 pcp 7
+ !
+!
+class-map ethernet Eth-vlan-113
+ flow 1
+  rule 1 match vlan 113
+ !
+!
+policy-map ELINE_PM_1
+ class-map-ethernet Eth-vlan-112
+  ingress meter-mef
+   eir 10000000
+  !
+  remove-cevlan
+ !
+!
+policy-map ELINE_PM_2
+ class-map-ethernet Eth-match-any-2
+  ingress meter-mef
+   eir 10000000
+  !
+ !
+!
+policy-map ELINE_PM_3
+ class-map-ethernet Eth-match-any-3
+  ingress meter-mef
+   eir 10000000
+  !
+ !
+!
+transport-service-profile SYSTEM_TSP
+ vlan-list 999
+!
+transport-service-profile meclab_TSP
+ vlan-list 111,222,333
+!
+dscp-map UNI
+ dscp EF 0
+!
+pon-cos-profile ont1_assured
+ prio     2
+ bw type explicit maximum 1000000 minimum 1000000
+ cos-type assured
+!
+pon-cos-profile ont1_ef
+ prio     4
+ bw type explicit maximum 2000000 minimum 2000000
+ cos-type expedited
+!
+pon-cos-profile ont2_ef
+ prio     4
+ bw type explicit maximum 2000000 minimum 2000000
+ cos-type expedited
+!
+pon-upstream-policy pup model single-cos
+ traffic-class 1
+  queue user-1/1
+ !
+!
+pon-upstream-policy pup4 model four-cos
+ traffic-class 1
+  queue user-1/1
+ !
+ traffic-class 2
+  queue user-1/2
+ !
+ traffic-class 3
+  queue user-2/1
+ !
+ traffic-class 4
+  queue user-2/2
+ !
+!
+nid-ipfix-profile system-default
+!
+l2cp-profile EP_LAN_TREE
+ l2cp-entry 01:80:C2:00:00:00 01:80:C2:00:00:00 tunnel
+ l2cp-entry 01:80:C2:00:00:01 01:80:C2:00:00:0A discard
+ l2cp-entry 01:80:C2:00:00:0B 01:80:C2:00:00:0D tunnel
+ l2cp-entry 01:80:C2:00:00:0E 01:80:C2:00:00:0E discard
+ l2cp-entry 01:80:C2:00:00:0F 01:80:C2:00:00:0F tunnel
+ l2cp-entry 01:80:C2:00:00:20 01:80:C2:00:00:2F tunnel
+!
+l2cp-profile EP_LINE_OPTION_1
+ l2cp-entry 01:80:C2:00:00:00 01:80:C2:00:00:00 tunnel
+ l2cp-entry 01:80:C2:00:00:01 01:80:C2:00:00:0A discard
+ l2cp-entry 01:80:C2:00:00:0B 01:80:C2:00:00:0D tunnel
+ l2cp-entry 01:80:C2:00:00:0E 01:80:C2:00:00:0E discard
+ l2cp-entry 01:80:C2:00:00:0F 01:80:C2:00:00:0F tunnel
+ l2cp-entry 01:80:C2:00:00:20 01:80:C2:00:00:2F tunnel
+!
+l2cp-profile EP_LINE_OPTION_2
+ l2cp-entry 01:80:C2:00:00:00 01:80:C2:00:00:00 tunnel
+ l2cp-entry 01:80:C2:00:00:01 01:80:C2:00:00:01 discard
+ l2cp-entry 01:80:C2:00:00:02 01:80:C2:00:00:03 tunnel
+ l2cp-entry 01:80:C2:00:00:04 01:80:C2:00:00:06 discard
+ l2cp-entry 01:80:C2:00:00:07 01:80:C2:00:00:07 tunnel
+ l2cp-entry 01:80:C2:00:00:08 01:80:C2:00:00:0D discard
+ l2cp-entry 01:80:C2:00:00:0E 01:80:C2:00:00:0E tunnel
+ l2cp-entry 01:80:C2:00:00:0F 01:80:C2:00:00:0F discard
+ l2cp-entry 01:80:C2:00:00:20 01:80:C2:00:00:2F tunnel
+!
+l2cp-profile EVP_LINE_LAN_TREE
+ l2cp-entry 01:80:C2:00:00:00 01:80:C2:00:00:0F discard
+ l2cp-entry 01:80:C2:00:00:20 01:80:C2:00:00:2F tunnel
+!
+multicast-profile NO_MVR
+!
+igmp-profile SYSTEM
+!
+ont-profile 710G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 710GX
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 711G
+ interface ont-ethernet f1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 711GE
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 711GX
+ interface ont-ethernet f1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 712G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet h1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 712GE
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet h1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 712GX
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet h1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 714G
+ interface ont-ethernet f1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 714GX
+ interface ont-ethernet f1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 716GE
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 717GE
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 720G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 720GX
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 721G
+ interface ont-ethernet f1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 721GE
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 721GX
+ interface ont-ethernet f1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 722G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet h1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface ont-ua 1
+ !
+!
+ont-profile 722GE
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet h1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+!
+ont-profile 722GX
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet h1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 724G
+ interface ont-ethernet f1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface rf-video r1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 724GX
+ interface ont-ethernet f1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface rf-video r1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 725G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 725GE
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 725GX
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 726GE
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 727GE
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface rf-video r1
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 742GE
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 743GE
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface t1 t1
+ !
+ interface t1 t2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+ interface ont-ua 3
+ !
+!
+ont-profile 744GE
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface t1 t1
+ !
+ interface t1 t2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+ interface ont-ua 3
+ !
+!
+ont-profile 760G
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface pots p5
+ !
+ interface pots p6
+ !
+ interface pots p7
+ !
+ interface pots p8
+ !
+ interface rf-video r1
+ !
+ interface rf-video r2
+ !
+ interface rf-video r3
+ !
+ interface rf-video r4
+ !
+ interface rf-video r5
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 760GX
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface pots p5
+ !
+ interface pots p6
+ !
+ interface pots p7
+ !
+ interface pots p8
+ !
+ interface rf-video r1
+ !
+ interface rf-video r2
+ !
+ interface rf-video r3
+ !
+ interface rf-video r4
+ !
+ interface rf-video r5
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 762G
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g5
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g6
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g7
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g8
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface pots p5
+ !
+ interface pots p6
+ !
+ interface pots p7
+ !
+ interface pots p8
+ !
+ interface rf-video r1
+ !
+ interface rf-video r2
+ !
+ interface rf-video r3
+ !
+ interface rf-video r4
+ !
+ interface rf-video r5
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 762GX
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g5
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g6
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g7
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g8
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface pots p5
+ !
+ interface pots p6
+ !
+ interface pots p7
+ !
+ interface pots p8
+ !
+ interface rf-video r1
+ !
+ interface rf-video r2
+ !
+ interface rf-video r3
+ !
+ interface rf-video r4
+ !
+ interface rf-video r5
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 763GX
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g5
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g6
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g7
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g8
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface pots p5
+ !
+ interface pots p6
+ !
+ interface pots p7
+ !
+ interface pots p8
+ !
+ interface rf-video r1
+ !
+ interface rf-video r2
+ !
+ interface rf-video r3
+ !
+ interface rf-video r4
+ !
+ interface rf-video r5
+ !
+ interface rf-video r6
+ !
+ interface rf-video r7
+ !
+ interface rf-video r8
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 766GX
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface pots p5
+ !
+ interface pots p6
+ !
+ interface pots p7
+ !
+ interface pots p8
+ !
+ interface t1 t1
+ !
+ interface t1 t2
+ !
+ interface t1 t3
+ !
+ interface t1 t4
+ !
+ interface t1 t5
+ !
+ interface t1 t6
+ !
+ interface t1 t7
+ !
+ interface t1 t8
+ !
+ interface rf-video r1
+ !
+ interface rf-video r2
+ !
+ interface rf-video r3
+ !
+ interface rf-video r4
+ !
+ interface rf-video r5
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+ interface ont-ua 3
+ !
+!
+ont-profile 767GX-R
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface pots p5
+ !
+ interface pots p6
+ !
+ interface pots p7
+ !
+ interface pots p8
+ !
+ interface t1 t1
+ !
+ interface t1 t2
+ !
+ interface t1 t3
+ !
+ interface t1 t4
+ !
+ interface t1 t5
+ !
+ interface t1 t6
+ !
+ interface t1 t7
+ !
+ interface t1 t8
+ !
+ interface rf-video r1
+ !
+ interface rf-video r2
+ !
+ interface rf-video r3
+ !
+ interface rf-video r4
+ !
+ interface rf-video r5
+ !
+ interface rf-video r6
+ !
+ interface rf-video r7
+ !
+ interface rf-video r8
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+ interface ont-ua 3
+ !
+!
+ont-profile 801G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+!
+ont-profile 801Gv2
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+!
+ont-profile 801XGS
+ interface ont-ethernet x1
+ !
+!
+ont-profile 803G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface ont-ua 1
+ !
+!
+ont-profile 803Gv2
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface ont-ua 1
+ !
+!
+ont-profile 811NG
+ interface ont-ethernet x1
+  alarm-suppression ENABLED
+ !
+!
+ont-profile 812G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 812Gv2
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 812NG
+ eth-oam-support calix
+ interface ont-ethernet x1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 813G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 813Gv2
+ eth-oam-support calix
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 814G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 818G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+!
+ont-profile 819G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 822G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 823G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 836GE
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 844G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 844GE
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 854G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 862NG
+ interface ont-ethernet x1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet x2
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface pots p3
+ !
+ interface pots p4
+ !
+ interface pots p5
+ !
+ interface pots p6
+ !
+ interface pots p7
+ !
+ interface pots p8
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile 882NG
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              nid
+ !
+ interface ont-ethernet x1
+  alarm-suppression ENABLED
+  role              nid
+ !
+ interface nid n1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile GH3200X
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet x1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile GIA
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+!
+ont-profile GP1000X
+ eth-oam-support calix
+ interface ont-ethernet x1
+  alarm-suppression ENABLED
+ !
+!
+ont-profile GP1100X
+ eth-oam-support calix
+ interface ont-ethernet x1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface ont-ua 1
+ !
+!
+ont-profile GP1200NG
+ eth-oam-support calix
+ interface ont-ethernet x1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile GP4200XH
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet x1
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile GPR3000X
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              nid
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              nid
+ !
+ interface ont-ethernet x1
+  alarm-suppression ENABLED
+  role              nid
+ !
+ interface nid n1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile GS4227
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+  role              rg
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface full-bridge F1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile T063G
+ vendor-id ERSN
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile T067G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rf-video r1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+ont-profile T072G
+ interface ont-ethernet g1
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g2
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g3
+  alarm-suppression ENABLED
+ !
+ interface ont-ethernet g4
+  alarm-suppression ENABLED
+ !
+ interface pots p1
+ !
+ interface pots p2
+ !
+ interface rg G1
+ !
+ interface ont-ua 1
+ !
+ interface ont-ua 2
+ !
+!
+dial-plan system-default
+ rule 1 pattern ^911n
+ rule 2 pattern ^411
+ rule 3 pattern ^[2-9][0-9]{6}
+ rule 4 pattern ^1[2-9][0-9]{9}
+ rule 5 pattern ^011[0-9]*T
+ rule 6 pattern ^S[0-9]{2}
+!
+slot 1/1
+ type          NGPON2-4
+ power-monitor A_B
+!
+slot 1/2
+!
+hostname  E7-2-olt
+ntp server 1
+ntp server 2
+environment-alarm input al1
+!
+environment-alarm input al2
+!
+environment-alarm input al3
+!
+environment-alarm input al4
+!
+environment-alarm input al5
+!
+environment-alarm input al6
+!
+environment-alarm input al7
+!
+environment-alarm output OUT1
+!
+aaa user calixsupport password $1$2GV.JGzm$wKm7TIsZZgQMlAgvMwnSe/ role calixsupport
+aaa user monitor password $1$bo6RaxHE$prYA2waVd/o4atvb1H8l8/ role oper
+aaa user networkadmin password $1$henWME92$LqNxDU3.wWG19Fz.AlL5H0 role networkadmin
+aaa user support password $1$s4LUL/4m$aQjOzqPRi/CUHpaYTGLGz/ role oper
+aaa user sysadmin password $1$.fwnoBuy$fmIOhTEfd3RGyOSiwaQA40 role admin
+auto-prov disable
+tcpdump seconds 30
+tcpdump packets 255
+vlan 111
+ mode ELINE
+!
+vlan 222
+ mode ELINE
+!
+vlan 333
+ mode ELINE
+!
+ont 1
+ profile-id    801XGS
+ serial-number 47846e
+ pon-us-cos user-1 pon-us-cos-profile ont1_ef
+!
+ont 2
+ profile-id    801XGS
+ serial-number 478490
+ pon-us-cos user-1 pon-us-cos-profile ont2_ef
+!
+interface craft 1
+ ip dhcp server enable
+ ip address 10.10.10.30/16
+ no shutdown
+!
+interface craft 2
+ ip dhcp server disable
+ shutdown
+!
+interface pon 1/1/xp1
+ no shutdown
+!
+interface pon 1/1/xp2
+!
+interface pon 1/1/xp3
+!
+interface pon 1/1/xp4
+!
+interface ont-ethernet 1/x1
+ role        uni
+ l2cp-action tunnel
+ vlan 333
+  policy-map ELINE_PM_3
+   class-map-ethernet Eth-match-any-3
+    ingress meter-mef
+    !
+   !
+  !
+  pon-upstream-policy pup
+ !
+!
+interface ont-ethernet 2/x1
+ role        uni
+ l2cp-action tunnel
+ vlan 222
+  policy-map ELINE_PM_2
+   class-map-ethernet Eth-match-any-2
+    ingress meter-mef
+    !
+   !
+  !
+  pon-upstream-policy pup
+ !
+!
+interface restricted-ip-host 1
+ shutdown
+!
+interface ethernet 1/1/x1
+ no shutdown
+ role                      inni
+ transport-service-profile meclab_TSP
+!
+interface ethernet 1/1/x2
+!
+interface ethernet 1/1/x3
+!
+interface ethernet 1/1/x4
+!

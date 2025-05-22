@@ -23,7 +23,8 @@ class PonCosProfileGetPutDelAPI(Resource):
         if name:
             profile = self.running_config.get_pon_cos_profile(name)
             if profile:
-                return str(profile), 200
+                print(profile.get_data())
+                return profile.get_data(), 200
             else:
                 return {'message': 'Profile not found'}, 404  # Not found
         else:
