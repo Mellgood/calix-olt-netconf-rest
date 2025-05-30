@@ -20,7 +20,7 @@ dev_env = os.getenv('DEV')
 running_config = None
 
 if __name__ == '__main__':
-    netconf_session = NetconfSession(host="10.13.17.60", port=830, username="sysadmin", password="sysadmin")
+    netconf_session = NetconfSession(host="10.30.7.6", port=830, username="sysadmin", password="sysadmin")
 
     if dev_env:
         print("[WARNING]: We are running in dev mode. No interaction with the OLT!")

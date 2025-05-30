@@ -11,7 +11,7 @@ from ncclient.operations import RPCError
 
 
 # Dati di connessione al dispositivo
-host = "10.13.17.60"  # Sostituisci con l'indirizzo IP del tuo dispositivo
+host = "10.30.7.6"  # Sostituisci con l'indirizzo IP del tuo dispositivo
 port = 830            # Porta NETCONF
 username = "sysadmin" # Nome utente per l'autenticazione
 password = "sysadmin" # Password per l'autenticazione
@@ -231,7 +231,7 @@ def add_vlan_to_general_tsp(m, vlan_id):
          contiene <profile> e <transport-service-profile>. -->
     <profile>
       <transport-service-profile>
-        <tsp-name>GENERAL_TSP</tsp-name>
+        <tsp-name>GENERAL_TSP{vlan_id}</tsp-name>
         <vlan-list>{vlan_id}</vlan-list>
       </transport-service-profile>
     </profile>
@@ -461,7 +461,7 @@ def apply_pon_cos_profile_ef(m, ont_id):
     except Exception as e:
         print(f"Errore: {e}")
 
-def activate_ethernet(m, port_number):
+def activate_ethernet(m, port_number, vlan_id):
     # Costruiamo l'XML che replichi la struttura di Netconf Explorer
     xml_snippet = f"""
 <config>
@@ -472,7 +472,7 @@ def activate_ethernet(m, port_number):
       <ethernet xmlns="http://www.calix.com/ns/ethernet-std">
         <role>inni</role>
         <native-vlan>999</native-vlan>
-        <transport-service-profile>GENERAL_TSP</transport-service-profile>
+        <transport-service-profile>GENERAL_TSP{vlan_id}</transport-service-profile>
       </ethernet>
     </interface>
   </interfaces>
@@ -522,7 +522,7 @@ def create_service(m, ont_id, cvlan, ethernet_port, svlan, profile, bw=None):
     add_vlan_to_general_tsp(m, svlan)
 
     # 7) Attivazione della porta Ethernet
-    activate_ethernet(m, ethernet_port)
+    activate_ethernet(m, ethernet_port, svlan)
 
     # 3) Creazione class-map Ethernet "match-any" per la ONT
     create_class_map_ethernet_match_any(m, ont_id)
@@ -1171,7 +1171,7 @@ def create_ont(m, ont_id, profile_id, serial_number):
         print(f"Errore durante la creazione della ONT {ont_id}: {e}")
 
 
-def activate_xp2(host="10.13.17.60", username="sysadmin", password="sysadmin",
+def activate_xp2(host="10.30.7.6", username="sysadmin", password="sysadmin",
                    ):
     """
     Disattiva l’interfaccia PON 1/1/xp2 tramite SSH/CLI.
@@ -1216,7 +1216,7 @@ def activate_xp2(host="10.13.17.60", username="sysadmin", password="sysadmin",
         except:
             pass
 
-def activate_xp1(host="10.13.17.60", username="sysadmin", password="sysadmin",
+def activate_xp1(host="10.30.7.6", username="sysadmin", password="sysadmin",
                    ):
     """
     Disattiva l’interfaccia PON 1/1/xp2 tramite SSH/CLI.
@@ -1261,7 +1261,7 @@ def activate_xp1(host="10.13.17.60", username="sysadmin", password="sysadmin",
         except:
             pass
 
-def deactivate_xp2(host="10.13.17.60", username="sysadmin", password="sysadmin",
+def deactivate_xp2(host="10.30.7.6", username="sysadmin", password="sysadmin",
                    ):
     """
     Disattiva l’interfaccia PON 1/1/xp2 tramite SSH/CLI.
@@ -1307,7 +1307,7 @@ def deactivate_xp2(host="10.13.17.60", username="sysadmin", password="sysadmin",
         except:
             pass
 
-def deactivate_xp1(host="10.13.17.60", username="sysadmin", password="sysadmin",
+def deactivate_xp1(host="10.30.7.6", username="sysadmin", password="sysadmin",
                    ):
     """
     Disattiva l’interfaccia PON 1/1/xp1 tramite SSH/CLI.

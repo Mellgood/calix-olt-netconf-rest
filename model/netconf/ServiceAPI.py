@@ -11,6 +11,7 @@ class ServiceAPI(Resource):
         payload = ns.payload
         netconf_session = NetconfSession()
 
+        print("payload service api:")
         print(payload)
 
         try:
@@ -36,6 +37,7 @@ class ServiceAPI(Resource):
         payload = ns.payload
         netconf_session = NetconfSession()
 
+        print("payload service api:")
         print(payload)
 
         try:
