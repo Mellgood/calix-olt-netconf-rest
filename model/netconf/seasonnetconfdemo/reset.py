@@ -2,7 +2,7 @@ from ncclient import manager
 from lxml import etree
 
 # Dati di connessione al dispositivo
-host = "10.10.10.30"  # Sostituisci con l'indirizzo IP del tuo dispositivo
+host = "10.13.17.112"  # Sostituisci con l'indirizzo IP del tuo dispositivo
 port = 830            # Porta NETCONF
 username = "sysadmin" # Nome utente per l'autenticazione
 password = "sysadmin" # Password per l'autenticazione

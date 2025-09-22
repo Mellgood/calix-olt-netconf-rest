@@ -8,7 +8,7 @@ from ncclient import manager
 
 def switch_configuration(config_type, mode):
     # Dettagli della connessione NETCONF per SS e PON
-    pon_host = "10.13.17.60"
+    pon_host = "10.13.17.112"
     pon_port = 830
     pon_username = "sysadmin"
     pon_password = "sysadmin"

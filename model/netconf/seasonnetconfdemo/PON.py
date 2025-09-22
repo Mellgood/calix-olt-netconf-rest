@@ -11,7 +11,7 @@ from ncclient.operations import RPCError
 
 
 # Dati di connessione al dispositivo
-host = "10.13.17.60"  # Sostituisci con l'indirizzo IP del tuo dispositivo
+host = "10.13.17.112"  # Sostituisci con l'indirizzo IP del tuo dispositivo
 port = 830            # Porta NETCONF
 username = "sysadmin" # Nome utente per l'autenticazione
 password = "sysadmin" # Password per l'autenticazione
@@ -1171,7 +1171,7 @@ def create_ont(m, ont_id, profile_id, serial_number):
         print(f"Errore durante la creazione della ONT {ont_id}: {e}")
 
 
-def activate_xp2(host="10.13.17.60", username="sysadmin", password="sysadmin",
+def activate_xp2(host="10.13.17.112", username="sysadmin", password="sysadmin",
                    ):
     """
     Disattiva l’interfaccia PON 1/1/xp2 tramite SSH/CLI.
@@ -1216,7 +1216,7 @@ def activate_xp2(host="10.13.17.60", username="sysadmin", password="sysadmin",
         except:
             pass
 
-def activate_xp1(host="10.13.17.60", username="sysadmin", password="sysadmin",
+def activate_xp1(host="10.13.17.112", username="sysadmin", password="sysadmin",
                    ):
     """
     Disattiva l’interfaccia PON 1/1/xp2 tramite SSH/CLI.
@@ -1261,7 +1261,7 @@ def activate_xp1(host="10.13.17.60", username="sysadmin", password="sysadmin",
         except:
             pass
 
-def deactivate_xp2(host="10.13.17.60", username="sysadmin", password="sysadmin",
+def deactivate_xp2(host="10.13.17.112", username="sysadmin", password="sysadmin",
                    ):
     """
     Disattiva l’interfaccia PON 1/1/xp2 tramite SSH/CLI.
@@ -1307,7 +1307,7 @@ def deactivate_xp2(host="10.13.17.60", username="sysadmin", password="sysadmin",
         except:
             pass
 
-def deactivate_xp1(host="10.13.17.60", username="sysadmin", password="sysadmin",
+def deactivate_xp1(host="10.13.17.112", username="sysadmin", password="sysadmin",
                    ):
     """
     Disattiva l’interfaccia PON 1/1/xp1 tramite SSH/CLI.
