@@ -11,6 +11,20 @@ from model.netconf.NetconfSession import NetconfSession
 from model.netconf.RunningConfig import RunningConfig
 from model.netconf.ServiceAPI import init_service_namespace
 
+import os
+from dotenv import load_dotenv
+from ipaddress import ip_address
+
+# Carica le variabili da .env (nella cwd o camminando verso l'alto)
+load_dotenv()
+
+OLT_IP = os.getenv("OLT_IP")
+if not OLT_IP:
+    raise RuntimeError("Missing OLT_IP in .env")
+
+# (opzionale) validazione formale dell'IP
+ip_address(OLT_IP)  # solleva ValueError se non è un IP valido
+
 app = Flask(__name__)
 api = Api(app, title='Univaq API for calix E-7', version='1.0',
           description='This set of API enables changing parameters on the Calix E-7 device through a REST API.')
@@ -20,7 +34,7 @@ dev_env = os.getenv('DEV')
 running_config = None
 
 if __name__ == '__main__':
-    netconf_session = NetconfSession(host="10.13.17.112", port=830, username="sysadmin", password="sysadmin")
+    netconf_session = NetconfSession(host=OLT_IP, port=830, username="sysadmin", password="sysadmin")
 
     if dev_env:
         print("[WARNING]: We are running in dev mode. No interaction with the OLT!")

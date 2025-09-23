@@ -5,15 +5,34 @@ import VOA
 import PON
 from ncclient import manager
 
+import os
+from dotenv import load_dotenv
+from ipaddress import ip_address
+
+# Carica le variabili da .env (nella cwd o camminando verso l'alto)
+load_dotenv()
+
+def read_ip(var_name: str) -> str:
+    val = os.getenv(var_name)
+    if not val:
+        raise RuntimeError(f"Missing {var_name} in .env")
+    # valida che sia un IP valido (IPv4/IPv6); solleva ValueError se non valido
+    ip_address(val)
+    return val
+
+OLT_IP = read_ip("OLT_IP")
+SS_IP  = read_ip("SS_IP")
+VOA_IP = read_ip("VOA_IP")
+
 
 def switch_configuration(config_type, mode):
     # Dettagli della connessione NETCONF per SS e PON
-    pon_host = "10.13.17.112"
+    pon_host = OLT_IP
     pon_port = 830
     pon_username = "sysadmin"
     pon_password = "sysadmin"
 
-    ss_host = "10.13.17.52"
+    ss_host = SS_IP
     ss_port = 830
     ss_username = "admin"
     ss_password = "root"

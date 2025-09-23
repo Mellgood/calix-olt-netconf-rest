@@ -8,10 +8,26 @@ from lxml import etree
 from ncclient import manager
 from ncclient.operations import RPCError
 
+import os
+from dotenv import load_dotenv
+from ipaddress import ip_address
+
+# Carica le variabili da .env (nella cwd o camminando verso l'alto)
+load_dotenv()
+
+def read_ip(var_name: str) -> str:
+    val = os.getenv(var_name)
+    if not val:
+        raise RuntimeError(f"Missing {var_name} in .env")
+    # valida che sia un IP valido (IPv4/IPv6); solleva ValueError se non valido
+    ip_address(val)
+    return val
+
+OLT_IP = read_ip("OLT_IP")
 
 
 # Dati di connessione al dispositivo
-host = "10.13.17.112"  # Sostituisci con l'indirizzo IP del tuo dispositivo
+host = OLT_IP  # Sostituisci con l'indirizzo IP del tuo dispositivo
 port = 830            # Porta NETCONF
 username = "sysadmin" # Nome utente per l'autenticazione
 password = "sysadmin" # Password per l'autenticazione
@@ -1171,7 +1187,7 @@ def create_ont(m, ont_id, profile_id, serial_number):
         print(f"Errore durante la creazione della ONT {ont_id}: {e}")
 
 
-def activate_xp2(host="10.13.17.112", username="sysadmin", password="sysadmin",
+def activate_xp2(host=OLT_IP, username="sysadmin", password="sysadmin",
                    ):
     """
     Disattiva l’interfaccia PON 1/1/xp2 tramite SSH/CLI.
@@ -1216,7 +1232,7 @@ def activate_xp2(host="10.13.17.112", username="sysadmin", password="sysadmin",
         except:
             pass
 
-def activate_xp1(host="10.13.17.112", username="sysadmin", password="sysadmin",
+def activate_xp1(host=OLT_IP, username="sysadmin", password="sysadmin",
                    ):
     """
     Disattiva l’interfaccia PON 1/1/xp2 tramite SSH/CLI.
@@ -1261,7 +1277,7 @@ def activate_xp1(host="10.13.17.112", username="sysadmin", password="sysadmin",
         except:
             pass
 
-def deactivate_xp2(host="10.13.17.112", username="sysadmin", password="sysadmin",
+def deactivate_xp2(host=OLT_IP, username="sysadmin", password="sysadmin",
                    ):
     """
     Disattiva l’interfaccia PON 1/1/xp2 tramite SSH/CLI.
@@ -1307,7 +1323,7 @@ def deactivate_xp2(host="10.13.17.112", username="sysadmin", password="sysadmin"
         except:
             pass
 
-def deactivate_xp1(host="10.13.17.112", username="sysadmin", password="sysadmin",
+def deactivate_xp1(host=OLT_IP, username="sysadmin", password="sysadmin",
                    ):
     """
     Disattiva l’interfaccia PON 1/1/xp1 tramite SSH/CLI.

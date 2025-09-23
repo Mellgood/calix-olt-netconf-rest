@@ -1,7 +1,19 @@
-from ncclient import manager
+import os
+from dotenv import load_dotenv
+from ipaddress import ip_address
+
+# Carica le variabili da .env (nella cwd o camminando verso l'alto)
+load_dotenv()
+
+OLT_IP = os.getenv("OLT_IP")
+if not OLT_IP:
+    raise RuntimeError("Missing OLT_IP in .env")
+
+# (opzionale) validazione formale dell'IP
+ip_address(OLT_IP)  # solleva ValueError se non è un IP valido
 
 # Dati di connessione al dispositivo
-host = "10.13.17.112"  # Sostituisci con l'indirizzo IP del tuo dispositivo
+host = OLT_IP  # Sostituisci con l'indirizzo IP del tuo dispositivo
 port = 830            # Porta NETCONF
 username = "sysadmin" # Nome utente per l'autenticazione
 password = "sysadmin" # Password per l'autenticazione

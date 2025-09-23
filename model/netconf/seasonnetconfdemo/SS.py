@@ -1,6 +1,23 @@
 from ncclient import manager
 import lxml.etree as ET
 
+import os
+from dotenv import load_dotenv
+from ipaddress import ip_address
+
+load_dotenv()  # carica .env nella cwd
+
+def read_ip(var_name: str) -> str:
+    val = os.getenv(var_name)
+    if not val:
+        raise RuntimeError(f"Missing {var_name} in .env")
+    # valida che sia un IP valido (IPv4/IPv6); solleva ValueError se non valido
+    ip_address(val)
+    return val
+
+OLT_IP = read_ip("OLT_IP")
+SS_IP  = read_ip("SS_IP")
+VOA_IP = read_ip("VOA_IP")
 
 def get_existing_cross_connects(m):
     try:
@@ -92,7 +109,7 @@ def set_configuration(host, port, username, password, config_type):
 if __name__ == '__main__':
     # Esempio di utilizzo
     set_configuration(
-        host="10.13.17.52",
+        host=SS_IP,
         port=830,
         username="admin",
         password="root",

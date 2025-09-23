@@ -1,8 +1,28 @@
 from ncclient import manager
 from lxml import etree
 
+import os
+from dotenv import load_dotenv
+from ipaddress import ip_address
+
+# Carica le variabili da .env (nella cwd o camminando verso l'alto)
+load_dotenv()
+
+def read_ip(var_name: str) -> str:
+    val = os.getenv(var_name)
+    if not val:
+        raise RuntimeError(f"Missing {var_name} in .env")
+    # valida che sia un IP valido (IPv4/IPv6); solleva ValueError se non valido
+    ip_address(val)
+    return val
+
+OLT_IP = read_ip("OLT_IP")
+SS_IP  = read_ip("SS_IP")
+VOA_IP = read_ip("VOA_IP")
+
+
 # Dati di connessione al dispositivo
-host = "10.13.17.112"  # Sostituisci con l'indirizzo IP del tuo dispositivo
+host = OLT_IP  # Sostituisci con l'indirizzo IP del tuo dispositivo
 port = 830            # Porta NETCONF
 username = "sysadmin" # Nome utente per l'autenticazione
 password = "sysadmin" # Password per l'autenticazione

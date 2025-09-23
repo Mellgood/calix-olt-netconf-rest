@@ -2,6 +2,25 @@ import socket
 import sys
 from time import sleep, time
 
+import os
+from dotenv import load_dotenv
+from ipaddress import ip_address
+
+load_dotenv()  # carica .env nella cwd
+
+def read_ip(var_name: str) -> str:
+    val = os.getenv(var_name)
+    if not val:
+        raise RuntimeError(f"Missing {var_name} in .env")
+    # valida che sia un IP valido (IPv4/IPv6); solleva ValueError se non valido
+    ip_address(val)
+    return val
+
+VOA_IP = read_ip("VOA_IP")
+VOA_PORT = os.getenv("VOA_PORT")
+if not VOA_PORT:
+    raise RuntimeError(f"Missing VOA_PORT in .env")
+
 
 def set_attenuation(att_val):
     # Use a breakpoint in the code line below to debug your script.
@@ -10,7 +29,7 @@ def set_attenuation(att_val):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Connect the socket to the port where the server is listening
-    server_address = ('10.13.17.73', 1234)
+    server_address = (VOA_IP, VOA_PORT)
     #print >> sys.stderr, 'connecting to %s port %s' % server_address
     sock.connect(server_address)
     try:
