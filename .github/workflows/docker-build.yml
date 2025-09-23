@@ -1,0 +1,49 @@
+name: Build & Push (multi-arch)
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Calcolo tag incrementale: torino-1.00, 1.01, ...
+      # Usiamo GITHUB_RUN_NUMBER - 1 così il primo run produce 1.00
+      - name: Compute tags
+        id: tags
+        run: |
+          RUN=$(( GITHUB_RUN_NUMBER - 1 ))
+          if [ "$RUN" -lt 0 ]; then RUN=0; fi
+          MINOR=$(printf "%02d" "$RUN")
+          echo "FULL_TAG=torino-1.${MINOR}" >> $GITHUB_OUTPUT
+          echo "full tag: torino-1.${MINOR}"
+
+      - name: Build & Push (linux/amd64 + linux/arm64)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/season-laquila:${{ steps.tags.outputs.FULL_TAG }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/season-laquila:latest
