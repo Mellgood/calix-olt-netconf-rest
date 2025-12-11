@@ -101,3 +101,6 @@ Replace `:1.0` with your desired version tag (`:1.1`, `:2.0`, etc.).
 
 - Device-specific: this application is tailored for Calix E7-2 systems using their proprietary YANG modules.
 - Use the `DEV=true` environment variable to develop and test without accessing the physical device.
+
+## Ack
+This development has been supported by the SNS SEASON Project (G.A: 101096120) – https://www.season-project.eu/”
